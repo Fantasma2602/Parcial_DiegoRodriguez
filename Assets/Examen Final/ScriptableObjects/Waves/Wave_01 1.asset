@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be7e9c04ffc584e40afe04da2ebd4122, type: 3}
+  m_Name: Wave_01 1
+  m_EditorClassIdentifier: Assembly-CSharp::WaveConfig
+  waveName: Wave 01
+  waveType: 1
+  enemies:
+  - enemyProfile: {fileID: 11400000, guid: b082ed5f479fd4d438bb8649d8e0926d, type: 2}
+    amount: 5
+    spawnDelay: 1
+  timeBeforeWave: 3
+  timeAfterWave: 5
+  eliteHealthMultiplier: 1.5
+  bossHealthMultiplier: 3
+  bossSpeedMultiplier: 1.25
