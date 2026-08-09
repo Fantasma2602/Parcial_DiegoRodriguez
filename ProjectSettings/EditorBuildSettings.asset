@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scene/ExamenProgra.unity
+    guid: 14365d21cce241e4b98f29a5a5172468
+  - enabled: 1
+    path: Assets/Scene/NuevoProf.unity
+    guid: bc6c6c3fde5270d43bcf9c3e26a23638
+  - enabled: 1
+    path: Assets/Scene/Sola.unity
+    guid: 52a02cd0452a9fb468cb471767a4db85
   m_configObjects: {}
