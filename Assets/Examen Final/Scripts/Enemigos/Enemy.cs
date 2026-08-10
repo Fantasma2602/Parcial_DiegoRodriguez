@@ -6,50 +6,73 @@ public class Enemy : MonoBehaviour, IDamageable
     [Header("Datos del enemigo")]
     [SerializeField] private EnemyProfile enemyProfile;
 
+    [Header("Estadísticas actuales")]
+    [SerializeField] private int currentHealth;
+    [SerializeField] private float currentSpeed;
+
     [Header("Objetivo")]
     [SerializeField] private Transform target;
 
     [Header("Estado")]
     [SerializeField] private EnemyState currentState = EnemyState.Idle;
 
-    private int currentHealth;
-
     public event Action<Enemy> OnEnemyDied;
     public event Action<Enemy> OnEnemyReachedTarget;
 
-    private void Start()
+    public void Initialize(
+        EnemyProfile profile,
+        Transform enemyTarget,
+        float healthMultiplier = 1f,
+        float speedMultiplier = 1f)
     {
-        InitializeEnemy();
+        enemyProfile = profile;
+        target = enemyTarget;
+
+        InitializeEnemy(
+            healthMultiplier,
+            speedMultiplier
+        );
+    }
+
+    private void InitializeEnemy(
+        float healthMultiplier,
+        float speedMultiplier)
+    {
+        if (enemyProfile == null)
+        {
+            Debug.LogError(
+                "El enemigo no tiene un EnemyProfile asignado.",
+                this
+            );
+
+            return;
+        }
+
+        currentHealth = Mathf.RoundToInt(
+            enemyProfile.health * healthMultiplier
+        );
+
+        currentSpeed =
+            enemyProfile.speed * speedMultiplier;
+
+        ChangeState(EnemyState.Walking);
+
+        Debug.Log(
+            $"{enemyProfile.enemyName} " +
+            $"| Vida: {currentHealth} " +
+            $"| Velocidad: {currentSpeed}"
+        );
     }
 
     private void Update()
     {
         UpdateState();
+
+        // Prueba de daño con la tecla espacio.
         if (Input.GetKeyDown(KeyCode.Space))
         {
             TakeDamage(10);
         }
-    }
-
-    public void Initialize(EnemyProfile profile, Transform enemyTarget)
-    {
-        enemyProfile = profile;
-        target = enemyTarget;
-
-        InitializeEnemy();
-    }
-
-    private void InitializeEnemy()
-    {
-        if (enemyProfile == null)
-        {
-            Debug.LogError("El enemigo no tiene un EnemyProfile asignado.", this);
-            return;
-        }
-
-        currentHealth = enemyProfile.health;
-
-        ChangeState(EnemyState.Walking);
     }
 
     private void UpdateState()
@@ -84,7 +107,9 @@ public class Enemy : MonoBehaviour, IDamageable
         if (target == null)
             return;
 
-        Vector3 direction = target.position - transform.position;
+        Vector3 direction =
+            target.position - transform.position;
+
         direction.y = 0f;
 
         if (direction.magnitude <= 1.5f)
@@ -93,9 +118,10 @@ public class Enemy : MonoBehaviour, IDamageable
             return;
         }
 
-        transform.position += direction.normalized *
-                              enemyProfile.speed *
-                              Time.deltaTime;
+        transform.position +=
+            direction.normalized *
+            currentSpeed *
+            Time.deltaTime;
     }
 
     private void HandleAttacking()
@@ -116,7 +142,8 @@ public class Enemy : MonoBehaviour, IDamageable
         currentHealth -= damage;
 
         Debug.Log(
-            $"{enemyProfile.enemyName} recibió {damage} de daño. Vida restante: {currentHealth}"
+            $"{enemyProfile.enemyName} recibió {damage} de daño. " +
+            $"Vida restante: {currentHealth}"
         );
 
         if (currentHealth <= 0)
@@ -153,7 +180,8 @@ public class Enemy : MonoBehaviour, IDamageable
         if (enemyProfile != null)
         {
             Debug.Log(
-                $"{enemyProfile.enemyName} cambió al estado: {currentState}"
+                $"{enemyProfile.enemyName} " +
+                $"cambió al estado: {currentState}"
             );
         }
     }

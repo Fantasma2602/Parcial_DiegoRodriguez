@@ -112,7 +112,8 @@ public class WaveManager : MonoBehaviour
                     yield break;
 
                 SpawnEnemy(
-                    spawnData.enemyProfile
+                    spawnData.enemyProfile,
+                    wave
                 );
 
                 yield return new WaitForSeconds(
@@ -122,7 +123,7 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    private void SpawnEnemy(EnemyProfile profile)
+    private void SpawnEnemy(EnemyProfile profile, WaveConfig wave)
     {
         if (profile == null)
         {
@@ -181,9 +182,32 @@ public class WaveManager : MonoBehaviour
             return;
         }
 
+        float healthMultiplier = 1f;
+        float speedMultiplier = 1f;
+
+        switch (wave.waveType)
+        {
+            case WaveType.Normal:
+                healthMultiplier = 1f;
+                speedMultiplier = 1f;
+                break;
+
+            case WaveType.Elite:
+                healthMultiplier = wave.eliteHealthMultiplier;
+                speedMultiplier = 1f;
+                break;
+
+            case WaveType.Boss:
+                healthMultiplier = wave.bossHealthMultiplier;
+                speedMultiplier = wave.bossSpeedMultiplier;
+                break;
+        }
+
         enemy.Initialize(
             profile,
-            enemyTarget
+            enemyTarget,
+            healthMultiplier,
+            speedMultiplier
         );
 
         enemy.OnEnemyDied += HandleEnemyDied;
